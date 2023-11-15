@@ -1,5 +1,4 @@
 import PySimpleGUI as sg
-import os
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 import pandas as pd
@@ -54,7 +53,7 @@ while True:
 
 
     # end program if user closes window
-    if event == "Exit" or event == sg.WIN_CLOSED:
+    if event == sg.WIN_CLOSED:
         break
 
     # with a folder selected, make a list of file in folder
@@ -72,9 +71,35 @@ while True:
             window['-MONITOR-'].update('Loading data..')
             window.refresh()
             data = pd.read_csv(filename)
+
+            # find out which column is to be annotated
+            column_list = list(data)
+            button_list = []
+            count=0
+
+            for item in column_list:
+                button_list.append(sg.Button(item, key=str(count)))
+                count += 1
+
+            popup_layout = [button_list]
+
+            popup = sg.Window('Select Column', layout=popup_layout)
+
+            while True:
+                event, values = popup.read()
+                if event == sg.WIN_CLOSED:
+                    break
+                else:
+                    for i in range(count):
+                        if event == str(i):
+                            column_of_interest = column_list[i]
+                            popup.close()
+                   
+
             data_loaded_flag = True
             window['-MONITOR-'].update('Data loaded')
             window.refresh()
+
         except:
             window['-MONITOR-'].update('Data failed to load')
             window.refresh()
@@ -92,7 +117,7 @@ while True:
                 event, values = window.read()
                 window.refresh()
                 try:
-                    sample = data.iloc[i]['msg_txt']
+                    sample = data.iloc[i][column_of_interest]
                     window['-DATA-'].update(sample)
                     window['-MONITOR-'].update(f'Data loaded \n{i}/{total} annotated')
                 except:
