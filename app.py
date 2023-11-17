@@ -4,8 +4,12 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 import pandas as pd
 
 # load in guidelines
-with open('guidelines.txt', 'r') as f:
-        guidelines = f.read()
+guidelines = 'Once you have selected a file, click \'Begin\'\n\
+Select a column from the pop-up to annotate.\n\
+Click \'Begin\' again to start annotating.\n\
+Enter your annotations and click \'Enter\'.\n\
+If you want to go back to a previous entry, click \'Back\'\n\
+At the end the file will be saved automatically.'
 
 info_column = [
     [sg.Text("Select a file of data to annotate:")],
@@ -13,7 +17,7 @@ info_column = [
     [sg.Text("Selected filename:")],
     [sg.Text(key='-FILENAME-')],
     [sg.HSeparator(),],
-    [sg.Text("Annotation Guidelines:")],
+    [sg.Text("Annotation Instructions:")],
     [sg.Text(size=(40, 10), key="-GUIDE-", text=guidelines, text_color= 'black', background_color='light blue')],
     [sg.HSeparator(),],
     [sg.Text('Process Information:',size=(40,1),key='-MONITOR HEADER-')],
